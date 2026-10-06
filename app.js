@@ -70,8 +70,8 @@ const FileStore = sessionFileStore(session);
 const company = {
   name: "Jeson International",
   tagline: "Premium Kitchen Sinks & Building Materials",
-  phone: "+91 90046 48415",
-  whatsapp: "919004648415",
+  phone: "+91 8924914868",
+  whatsapp: "8924914868",
   address:
     "Usha Complex Society Rd, Bhandup West, Mumbai, Maharashtra 400078, India",
   website: "https://www.jesoninternational.com/",

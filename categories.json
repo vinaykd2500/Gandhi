@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Wash Basins",
+    "icon": "fa-soap"
+  },
+  {
+    "name": "Factory Infrastructure",
+    "icon": "fa-industry"
+  },
+  {
+    "name": "Leadership & Team",
+    "icon": "fa-users"
+  },
+  {
+    "name": "Miscellaneous",
+    "icon": "fa-layer-group"
+  },
+  {
+    "name": "Kitchen Sinks",
+    "icon": "fa-folder"
+  },
+  {
+    "name": "Seat Covers",
+    "icon": "fa-folder"
+  },
+  {
+    "name": "Pipe",
+    "icon": "fa-folder"
+  }
+]

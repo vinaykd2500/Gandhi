@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <div class="catalog-header">
+      <div class="section-title"><small>Engineered for the trade</small>
+        <h1>Product Catalogue</h1>
+      </div>
+      <p class="catalog-subtitle">Browse our sanitary solutions and plumbing essentials designed for residential, commercial, and project-based applications.</p>
+    </div>
+
+    <div class="catalog-toolbar">
+      <% categories.forEach(cat => { %>
+      <a href="/products?category=<%= encodeURIComponent(cat) %>" class="btn catalog-filter <%= selectedCategory === cat ? 'btn-primary' : 'btn-outline' %>">
+        <%= cat %>
+      </a>
+      <% }) %>
+    </div>
+
+    <% if (products.length === 0) { %>
+    <div class="catalog-empty">
+      No products found in this category.
+    </div>
+    <% } else { %>
+    <div class="grid grid-4" data-lightbox-group="catalogue">
+      <% products.forEach(product => { %>
+      <div class="product-card">
+        <div class="product-card-image">
+          <img class="js-lightbox-image" src="<%= product.image %>" alt="<%= product.title %>" loading="lazy" width="600" height="420">
+        </div>
+        <div class="product-card-body">
+          <span class="product-category"><%= product.category %></span>
+          <h3><%= product.title %></h3>
+          <p class="product-specs"><%= product.specifications %></p>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

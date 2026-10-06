@@ -1,0 +1,147 @@
+<!-- Site Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h3><%= company.name %></h3>
+      <p><%= company.tagline %></p>
+      <p>Premium kitchen sinks, flushing cisterns, wash basins, and sanitary fittings engineered for durability and design.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Products</h4>
+      <ul>
+        <% const footerCategories = typeof productCategories !== 'undefined' ? productCategories : []; %>
+        <% footerCategories.forEach(category => { %>
+        <li><a href="/products?category=<%= encodeURIComponent(category) %>"><%= category %></a></li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Product Catalogue</a></li>
+        <li><a href="/gallery">Infrastructure Gallery</a></li>
+        <li><a href="/about-us">About Company</a></li>
+        <li><a href="/contact-us">Contact & Inquiries</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>
+        <i class="fa-solid fa-location-pin" style="color: rgb(214, 57, 19);"></i>
+        <a href="https://maps.app.goo.gl/uYKkvaXJNfMyB34H9" target="_blank" rel="noopener noreferrer">
+          <%= company.address %>
+        </a>
+      </p>
+      <p><i class="fa-solid fa-phone-volume" style="color: rgb(13, 88, 222);"></i><a href="tel:<%= company.phone %>"><%= company.phone %></a></p>
+      <p><i class="fa-brands fa-whatsapp" style="color: rgb(99, 230, 190);"></i> <a href="https://wa.me/<%= company.whatsapp %>" target="_blank">Direct WhatsApp Chat</a></p>
+      <p>
+        <i class="fa-solid fa-envelope" style="color: rgb(99, 203, 230);"></i>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<%= company.email %>" target="_blank" rel="noopener noreferrer">
+          <%= company.email %>
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>&copy; <%= new Date().getFullYear() %> <%= company.name %>. All Rights Reserved.</p>
+      <p>
+        <i class="fa-solid fa-user-lock" style="color: rgb(221, 221, 24);"></i>
+        <a href="/admin/login" class="admin-link">Staff Login</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<div id="imageModal" role="dialog" aria-modal="true" aria-label="Expanded image" style="display: none; position: fixed; z-index: 99999; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; cursor: pointer;">
+  <button type="button" aria-label="Close expanded image" onclick="closeModal()" style="position: absolute; top: 20px; right: 30px; font-size: 35px; color: #fff; font-weight: bold; cursor: pointer; background: transparent; border: 0;">&times;</button>
+  <button id="modalPrev" class="modal-nav modal-nav-prev" type="button" aria-label="Previous image">&#60;</button>
+  <div style="position: relative; max-width: 82%; max-height: 85%;">
+    <img id="modalImg" src="" alt="Enlarged view" style="max-width: 100%; max-height: 85vh; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); object-fit: contain; cursor: default;">
+  </div>
+  <button id="modalNext" class="modal-nav modal-nav-next" type="button" aria-label="Next image">&#62;</button>
+</div>
+
+<script>
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalPrev = document.getElementById('modalPrev');
+  const modalNext = document.getElementById('modalNext');
+  let activeImages = [];
+  let activeImageIndex = 0;
+  let modalControlsTimeout;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const targetImages = document.querySelectorAll('.js-lightbox-image');
+
+    targetImages.forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const group = img.closest('[data-lightbox-group]');
+        activeImages = Array.from(group ? group.querySelectorAll('.js-lightbox-image') : [img]);
+        activeImageIndex = activeImages.indexOf(img);
+        showModalImage();
+      });
+    });
+  });
+
+  function showModalImage() {
+    const image = activeImages[activeImageIndex];
+    if (!image) return;
+    modalImg.src = image.src;
+    modalImg.alt = image.alt;
+    modalPrev.style.display = activeImages.length > 1 ? 'block' : 'none';
+    modalNext.style.display = activeImages.length > 1 ? 'block' : 'none';
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    modal.classList.remove('controls-visible');
+  }
+
+  function moveModalImage(direction) {
+    if (activeImages.length < 2) return;
+    activeImageIndex = (activeImageIndex + direction + activeImages.length) % activeImages.length;
+    showModalImage();
+  }
+
+  modalPrev.addEventListener('click', event => {
+    event.stopPropagation();
+    moveModalImage(-1);
+  });
+
+  modalNext.addEventListener('click', event => {
+    event.stopPropagation();
+    moveModalImage(1);
+  });
+
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+
+  modal.addEventListener('mousemove', () => {
+    if (activeImages.length < 2) return;
+    modal.classList.add('controls-visible');
+    clearTimeout(modalControlsTimeout);
+    modalControlsTimeout = setTimeout(() => modal.classList.remove('controls-visible'), 700);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+    if (modal.style.display === 'flex' && e.key === 'ArrowLeft') moveModalImage(-1);
+    if (modal.style.display === 'flex' && e.key === 'ArrowRight') moveModalImage(1);
+  });
+
+</script>
+</body>
+
+</html>

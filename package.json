@@ -1,0 +1,25 @@
+{
+  "name": "jesontechnology",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "author": "Boogeyman && ZedSparky",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0",
+    "file-type": "^22.1.1",
+    "helmet": "^8.3.0",
+    "method-override": "^3.0.0",
+    "multer": "^2.4.0",
+    "session-file-store": "^1.5.0"
+  }
+}

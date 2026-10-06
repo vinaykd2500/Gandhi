@@ -1,0 +1,223 @@
+ <%- include('../partials/admin-header', { pageTitle: 'Customer Inquiries', activeMenu: 'inquiries' }) %>
+
+ <style>
+   /* Status Filter Tabs */
+   .filter-tabs {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 20px;
+   }
+
+   .tab-btn {
+     text-decoration: none;
+     padding: 8px 16px;
+     border-radius: 8px;
+     font-size: 13px;
+     font-weight: 600;
+     color: #64748b;
+     background: #fff;
+     border: 1px solid #e2e8f0;
+     transition: all 0.2s;
+   }
+
+   .tab-btn:hover {
+     background: #f8fafc;
+     color: #0f172a;
+   }
+
+   .tab-btn.active {
+     background: #0284c7;
+     color: #fff;
+     border-color: #0284c7;
+   }
+
+   /* Status Badges */
+   .badge-pending {
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+     font-size: 12px;
+     font-weight: 600;
+     color: #d97706;
+     background: #fef3c7;
+     padding: 4px 10px;
+     border-radius: 20px;
+   }
+
+   .badge-completed {
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+     font-size: 12px;
+     font-weight: 600;
+     color: #15803d;
+     background: #dcfce7;
+     padding: 4px 10px;
+     border-radius: 20px;
+   }
+
+   .badge-pending .dot-yellow {
+     width: 6px;
+     height: 6px;
+     border-radius: 50%;
+     background: #f59e0b;
+   }
+
+   .badge-completed .dot-green {
+     width: 6px;
+     height: 6px;
+     border-radius: 50%;
+     background: #22c55e;
+   }
+
+   /* Action Buttons */
+   .btn-action-complete {
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+     padding: 6px 12px;
+     border-radius: 6px;
+     border: 1px solid #bbf7d0;
+     color: #15803d;
+     background: #f0fdf4;
+     font-weight: 600;
+     font-size: 12px;
+     cursor: pointer;
+     margin-right: 6px;
+   }
+
+   .btn-action-complete:hover {
+     background: #dcfce7;
+   }
+
+ </style>
+
+ <div class="breadcrumb">Dashboard / Customer Inquiries</div>
+
+ <div class="content-header">
+   <div class="content-header-title">
+     <div class="icon-box">
+       <i class="fa-regular fa-comment-dots"></i>
+     </div>
+     <div>
+       <h1 style="font-size: 24px; color: #0f172a;">Customer Inquiries</h1>
+       <p style="font-size: 13.5px; color: #64748b; margin-top: 2px;">Review and manage incoming leads and message submissions.</p>
+     </div>
+   </div>
+ </div>
+
+ <!-- Stat Summary Row -->
+ <div class="stats-row">
+   <div class="stat-card">
+     <div class="stat-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-clock"></i></div>
+     <div>
+       <small>Pending Action</small>
+       <h3><%= pendingCount %></h3>
+     </div>
+   </div>
+   <div class="stat-card">
+     <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fa-solid fa-circle-check"></i></div>
+     <div>
+       <small>Completed</small>
+       <h3><%= completedCount %></h3>
+     </div>
+   </div>
+ </div>
+
+ <!-- Filter Tabs -->
+ <div class="filter-tabs">
+   <a href="/admin/inquiries?status=All" class="tab-btn <%= selectedStatus === 'All' ? 'active' : '' %>">
+     All (<%= totalCount %>)
+   </a>
+   <a href="/admin/inquiries?status=Pending" class="tab-btn <%= selectedStatus === 'Pending' ? 'active' : '' %>">
+     Pending (<%= pendingCount %>)
+   </a>
+   <a href="/admin/inquiries?status=Completed" class="tab-btn <%= selectedStatus === 'Completed' ? 'active' : '' %>">
+     Completed (<%= completedCount %>)
+   </a>
+ </div>
+
+ <!-- Inquiries Table -->
+ <div class="table-card">
+   <div class="table-scroll">
+   <table>
+     <thead>
+       <tr>
+         <th style="width: 120px;">Date</th>
+         <th style="width: 150px;">Customer</th>
+         <th style="width: 220px;">Contact Details</th>
+         <th>Message / Requirement</th>
+         <th style="width: 110px;">Status</th>
+         <th style="text-align: right; width: 180px;">Actions</th>
+       </tr>
+     </thead>
+     <tbody>
+       <% if (!inquiries || inquiries.length === 0) { %>
+       <tr>
+         <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">
+           No inquiries found under status <strong>"<%= selectedStatus %>"</strong>.
+         </td>
+       </tr>
+       <% } else { %>
+       <% inquiries.forEach(inquiry => { %>
+       <% const status = inquiry.status || 'Pending'; %>
+       <tr>
+         <td style="white-space: nowrap; font-size: 12.5px; color: #64748b;">
+           <%= inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : (inquiry.date || 'N/A') %>
+         </td>
+         <td style="font-weight: 600; color: #0f172a;">
+           <%= inquiry.name || 'Anonymous' %>
+         </td>
+         <td>
+           <% if (inquiry.email) { %>
+           <div style="font-weight: 500; color: #334155;">
+             <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<%= inquiry.email %>" target="_blank" style="color: #0284c7; text-decoration: none;">
+               <%= inquiry.email %>
+             </a>
+           </div>
+           <% } %>
+           <% if (inquiry.phone) { %>
+           <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
+             <i class="fa-solid fa-phone" style="font-size: 10px;"></i> <%= inquiry.phone %>
+           </div>
+           <% } %>
+         </td>
+         <td style="color: #334155; line-height: 1.4; max-width: 320px;">
+           <%= inquiry.message %>
+         </td>
+         <td>
+           <% if (status === 'Completed') { %>
+           <span class="badge-completed"><span class="dot-green"></span> Completed</span>
+           <% } else { %>
+           <span class="badge-pending"><span class="dot-yellow"></span> Pending</span>
+           <% } %>
+         </td>
+         <td style="text-align: right; white-space: nowrap;">
+           <% if (status !== 'Completed') { %>
+           <form action="/admin/inquiries/<%= inquiry.id %>/complete" method="POST" style="display: inline;">
+             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+             <button type="submit" title="Mark as Completed" class="btn-action-complete">
+               <i class="fa-solid fa-check"></i> Complete
+             </button>
+           </form>
+           <% } %>
+           <form action="/admin/inquiries/<%= inquiry.id %>?_method=DELETE" method="POST" style="display: inline;">
+             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+             <button type="submit" onclick="return confirm('Delete this inquiry?')" class="btn-action-delete">
+               <i class="fa-regular fa-trash-can"></i> Delete
+             </button>
+           </form>
+         </td>
+       </tr>
+       <% }) %>
+       <% } %>
+     </tbody>
+   </table>
+   </div>
+
+   <div class="table-footer">
+     <div>Showing <%= inquiries.length %> inquiry entries</div>
+   </div>
+ </div>
+
+ <%- include('../partials/admin-footer') %>

@@ -1,0 +1,96 @@
+ <%- include('../partials/admin-header', { pageTitle: 'Dashboard', activeMenu: selectedCategory === 'All' ? 'dashboard' : '' }) %>
+
+ <div class="breadcrumb">Dashboard / <%= selectedCategory %></div>
+
+ <div class="content-header">
+   <div class="content-header-title">
+     <div class="icon-box">
+       <i class="fa-solid fa-layer-group"></i>
+     </div>
+     <div>
+       <h1 style="font-size: 24px; color: #0f172a;"><%= selectedCategory %></h1>
+       <p style="font-size: 13.5px; color: #64748b; margin-top: 2px;">Manage items in this category. Add, edit or remove products.</p>
+     </div>
+   </div>
+  <a href="/admin/products/new?category=<%= encodeURIComponent(selectedCategory) %>" class="btn-add">
+     <i class="fa-solid fa-plus"></i> Add New Item
+   </a>
+ </div>
+
+ <!-- Stat Cards Row -->
+ <div class="stats-row">
+   <div class="stat-card">
+     <div class="stat-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-boxes-stacked"></i></div>
+     <div>
+       <small>All Products</small>
+       <h3><%= totalCount %></h3>
+     </div>
+   </div>
+   <div class="stat-card">
+     <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fa-regular fa-folder-open"></i></div>
+     <div>
+       <small>In <%= selectedCategory %></small>
+       <h3><%= catCount %></h3>
+     </div>
+   </div>
+ </div>
+
+ <!-- Clean Products Table -->
+ <div class="table-card">
+   <div class="table-scroll">
+   <table>
+     <thead>
+       <tr>
+         <th style="width: 80px;">Image</th>
+         <th>Title</th>
+         <th>Status</th>
+         <th>Category</th>
+         <th style="text-align: right; width: 180px;">Actions</th>
+       </tr>
+     </thead>
+     <tbody>
+       <% if (products.length === 0) { %>
+       <tr>
+         <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+           No items found in "<%= selectedCategory %>". Click "Add New Item" to create one.
+         </td>
+       </tr>
+       <% } else { %>
+       <% products.forEach(product => { %>
+       <tr>
+         <td>
+           <img src="<%= product.image %>" alt="<%= product.title %>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #e2e8f0;">
+         </td>
+         <td style="font-weight: 600; color: #0f172a;"><%= product.title %></td>
+         <td>
+           <span class="badge-published">
+             <span class="dot"></span> Active
+           </span>
+         </td>
+         <td>
+           <span style="font-size: 11px; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-weight: 600; color: #475569;"><%= product.category %></span>
+         </td>
+         <td style="text-align: right; white-space: nowrap;">
+           <a href="/admin/products/<%= product.id %>/edit" class="btn-action-edit">
+             <i class="fa-solid fa-pen"></i> Edit
+           </a>
+           <form action="/admin/products/<%= product.id %>?_method=DELETE" method="POST" style="display: inline;">
+             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+             <button type="submit" onclick="return confirm('Delete this item?')" class="btn-action-delete">
+               <i class="fa-regular fa-trash-can"></i> Delete
+             </button>
+           </form>
+         </td>
+       </tr>
+       <% }) %>
+       <% } %>
+     </tbody>
+   </table>
+   </div>
+
+   <div class="table-footer">
+     <div>Showing <%= products.length %> items</div>
+   </div>
+ </div>
+
+ <%- include('../partials/admin-footer') %>

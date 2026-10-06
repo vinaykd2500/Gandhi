@@ -1,0 +1,181 @@
+<%- include('partials/header') %>
+
+<script type="application/ld+json">
+  <%- JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: company.name,
+    url: company.website,
+    email: company.email,
+    telephone: company.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: company.address,
+      addressCountry: "IN"
+    }
+  }) %>
+
+</script>
+
+<section class="hero-section">
+  <div class="container hero-content">
+    <span class="hero-badge">Manufacturer · Wholesale · Project Supply</span>
+    <h1>Premium Stainless Steel Kitchen Sink Manufacturer</h1>
+    <p>Supplying dealers, distributors, contractors and institutional buyers with dependable sanitaryware and plumbing products across India.</p>
+    <div class="hero-actions">
+      <a href="/products" class="btn btn-primary">Explore Catalogue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="https://wa.me/<%= company.whatsapp %>?text=Hello%20Jeson%20International,%20I%20need%20a%20quotation" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp Sales</a>
+    </div>
+  </div>
+</section>
+
+<section class="stats-strip" aria-label="Company capability statistics">
+  <div class="container stats-grid">
+    <div class="stat-box">
+      <h3><span class="stat-counter" data-target="15" data-suffix="+">0</span></h3>
+      <p>Years of expertise</p>
+    </div>
+    <div class="stat-box">
+      <h3><span class="stat-counter" data-target="150" data-suffix="+">0</span></h3>
+      <p>Authorized dealers</p>
+    </div>
+    <div class="stat-box">
+      <h3><span class="stat-counter" data-target="40" data-suffix="+">0</span></h3>
+      <p>Distributors pan-India</p>
+    </div>
+    <div class="stat-box">
+      <h3><span class="stat-counter" data-target="50000" data-suffix="+">0</span></h3>
+      <p>Units dispatched yearly</p>
+    </div>
+  </div>
+</section>
+
+<section class="section home-about">
+  <div class="container split-section">
+    <div class="split-copy">
+      <span class="eyebrow">Built for the trade</span>
+      <h2>One reliable partner for complete sanitary supply.</h2>
+      <p>Jeson International combines practical product engineering with responsive wholesale support. Our range is built for consistent installation, dependable performance and repeat orders.</p>
+      <p>From precision-formed kitchen sinks to flushing cisterns, wash basins and plumbing fittings, we help trade partners serve residential, commercial and infrastructure projects with confidence.</p>
+      <div class="hero-actions"><a href="/about-us" class="btn btn-outline">About Jeson International</a></div>
+    </div>
+    <div class="trust-panel">
+      <span class="eyebrow">Why buyers choose us</span>
+      <h3>Made for dependable business.</h3>
+      <ul class="trust-list">
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Factory-direct pricing for wholesale and project requirements.</span></li>
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Product categories that cover the essential sanitary package.</span></li>
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Responsive quotation support through phone, email and WhatsApp.</span></li>
+      </ul>
+      <div class="trust-badges"><span>Quality focused</span><span>Pan-India supply</span><span>Trade support</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section home-portfolio" style="background: #edf3f6;">
+  <div class="container">
+    <div class="section-title"><small>Product portfolio</small>
+      <h2>Solutions for every installation.</h2>
+      <p>Choose a category to see the products available for your next order or project schedule.</p>
+    </div>
+    <div class="grid grid-4">
+      <% const categoryDetails = {
+        'Kitchen Sinks': { label: 'sinks', icon: 'fa-sink', description: 'Single, double bowl and practical formats for modern kitchens.' },
+        'Cisterns': { label: 'cisterns', icon: 'fa-toilet', description: 'Reliable flushing systems for residential and commercial use.' },
+        'Wash Basins': { label: 'basins', icon: 'fa-hand-sparkles', description: 'Clean, functional basin solutions for everyday installations.' },
+        'Pipes & Fittings': { label: 'fittings', icon: 'fa-wrench', description: 'Essential connections, waste couplings and drainage components.' }
+      }; %>
+      <% const portfolioCategories = categories.map(name => ({
+        name,
+        ...(categoryDetails[name] || { label: name.toLowerCase(), icon: 'fa-folder-open', description: 'Explore products available in this catalogue.' })
+      })); %>
+      <% portfolioCategories.forEach(category => {
+        const featuredProduct = products.find(product => product.category === category.name && product.image);
+      %>
+        <a href="/products?category=<%= encodeURIComponent(category.name) %>" class="category-card">
+          <% if (featuredProduct) { %>
+            <div class="category-card-image">
+              <img src="<%= featuredProduct.image %>" alt="<%= featuredProduct.title %>" loading="lazy" width="600" height="360">
+            </div>
+          <% } else { %>
+            <div class="card-icon"><i class="fa-solid <%= category.icon %>" aria-hidden="true"></i></div>
+          <% } %>
+          <h3><%= category.name %></h3>
+          <p><%= category.description %></p>
+          <span class="card-link">View <%= category.label %> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="section home-advantage">
+  <div class="container">
+    <div class="section-title"><small>Our advantage</small>
+      <h2>Built around quality, supply and service.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="feature-box">
+        <div class="card-icon"><i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i></div>
+        <h3>Direct OEM pricing</h3>
+        <p>Transparent commercial support that helps dealers and project buyers protect their margins.</p>
+      </div>
+      <div class="feature-box">
+        <div class="card-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+        <h3>Quality-led products</h3>
+        <p>Materials and components selected for durability, fit and dependable day-to-day performance.</p>
+      </div>
+      <div class="feature-box">
+        <div class="card-icon"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i></div>
+        <h3>Bulk supply capability</h3>
+        <p>Organized support for repeat trade orders, contractor requirements and institutional supply.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <div class="container cta-inner">
+    <div>
+      <h3>Looking for bulk supply or a distribution partnership?</h3>
+      <p>Share your product list, quantity and delivery city with our sales desk.</p>
+    </div>
+    <div class="cta-buttons"><a href="/contact-us" class="btn btn-primary">Request a Quotation</a><a href="https://wa.me/<%= company.whatsapp %>" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp Now</a></div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.stat-counter');
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      counters.forEach(counter => {
+        const target = Number(counter.dataset.target);
+        const suffix = counter.dataset.suffix || '';
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          counter.textContent = target.toLocaleString('en-IN') + suffix;
+          return;
+        }
+
+        const startTime = performance.now();
+        const duration = 1800;
+        const updateCounter = currentTime => {
+          const progress = Math.min((currentTime - startTime) / duration, 1);
+          const easedProgress = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = Math.floor(easedProgress * target).toLocaleString('en-IN') + suffix;
+          if (progress < 1) requestAnimationFrame(updateCounter);
+        };
+
+        counter.textContent = `0${suffix}`;
+        requestAnimationFrame(updateCounter);
+      });
+      observer.disconnect();
+    }, {
+      threshold: 0.4
+    });
+    const stats = document.querySelector('.stats-strip');
+    if (stats) observer.observe(stats);
+  });
+
+</script>
+<%- include('partials/footer') %>

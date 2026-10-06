@@ -1,0 +1,57 @@
+ <%- include('../partials/admin-header', { pageTitle: 'Add New Item', activeMenu: 'dashboard' }) %>
+
+<div class="breadcrumb">Dashboard / Add New Item</div>
+<h1 style="font-size: 24px; color: #0f172a; margin-bottom: 25px;">Add New Product</h1>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <div style="background-color: #fee2e2; color: #b91c1c; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f87171; display: flex; align-items: center; gap: 10px; font-size: 14.5px;">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span><%= error %></span>
+  </div>
+<% } %>
+
+<div class="form-card">
+  <form action="/admin/products?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-group">
+      <label>Item Title</label>
+      <input 
+        type="text" 
+        name="title" 
+        class="form-control" 
+        placeholder="e.g. Single Bowl Sink JS-1001" 
+        value="<%= typeof product !== 'undefined' && product.title ? product.title : '' %>" 
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category" class="form-control" required>
+        <% categories.forEach(category => { %>
+          <option 
+            value="<%= category.name %>" 
+            <%= (typeof product !== 'undefined' && product.category === category.name) || category.name === selectedProductCategory ? 'selected' : '' %>
+          >
+            <%= category.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Upload Image</label>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" class="form-control" required>
+      <small style="color: #64748b; font-size: 12.5px; display: block; margin-top: 5px;">Max file size: 5 MB (Formats: JPG, PNG, WebP, GIF)</small>
+    </div>
+
+    <div style="margin-top: 25px;">
+      <button type="submit" class="btn-submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload & Save</button>
+      <a href="/admin" class="btn-cancel">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<%- include('../partials/admin-footer') %>

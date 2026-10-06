@@ -1,0 +1,41 @@
+ <%- include('../partials/admin-header', { pageTitle: 'Edit Item', activeMenu: 'dashboard' }) %>
+
+<div class="breadcrumb">Dashboard / Edit Item</div>
+<h1 style="font-size: 24px; color: #0f172a; margin-bottom: 25px;">Edit Item: <%= product.title %></h1>
+
+<div class="form-card">
+  <form action="/admin/products/<%= product.id %>?_method=PUT&_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-group">
+      <label>Item Title</label>
+      <input type="text" name="title" value="<%= product.title %>" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category" class="form-control" required>
+        <% categories.forEach(category => { %>
+        <option value="<%= category.name %>" <%= product.category === category.name ? 'selected' : '' %>><%= category.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Current Photo</label>
+      <div style="margin-bottom: 12px;">
+        <img src="<%= product.image %>" alt="<%= product.title %>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1;">
+      </div>
+      <label style="font-size: 12.5px; color: #64748b;">Replace Image (Optional):</label>
+      <input type="file" name="image" accept="image/*" class="form-control">
+    </div>
+
+    <div style="margin-top: 25px;">
+      <button type="submit" class="btn-submit"><i class="fa-solid fa-check"></i> Update Changes</button>
+      <a href="/admin" class="btn-cancel">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<%- include('../partials/admin-footer') %>

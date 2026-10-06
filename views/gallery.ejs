@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<section class="section" style="padding-top: 72px;">
+  <div class="container">
+    <div class="section-title">
+      <small>Infrastructure & Excellence</small>
+      <h2>Factory Tour & Operations Gallery</h2>
+      <p style="max-width: 660px; margin: 10px auto 0; color: var(--muted); font-size: 1rem;">
+        Glimpses of our advanced deep-draw hydraulic machinery, production floor, and leadership presence across the manufacturing lifecycle.
+      </p>
+    </div>
+
+    <% 
+      const galleryCategories = ['Factory Infrastructure', 'Leadership & Team', 'Miscellaneous'];
+      const nonProductPhotos = products.filter(p => galleryCategories.includes(p.category));
+    %>
+
+    <% if (nonProductPhotos.length === 0) { %>
+    <div style="text-align: center; padding: 60px 20px; color: var(--muted); border: 1px dashed var(--line); border-radius: 16px; background: #fff;">
+      No gallery photos have been uploaded yet.
+    </div>
+    <% } else { %>
+    <div class="grid grid-3" data-lightbox-group="gallery" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+      <% nonProductPhotos.forEach(item => { %>
+      <div class="product-card">
+        <div class="product-card-image" style="height: 250px;">
+          <img class="js-lightbox-image" src="<%= item.image %>" alt="<%= item.title %>">
+        </div>
+        <div class="product-card-body">
+          <span class="product-category"><%= item.category %></span>
+          <h3><%= item.title %></h3>
+          <% if (item.specifications) { %>
+          <p class="product-specs"><%= item.specifications %></p>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

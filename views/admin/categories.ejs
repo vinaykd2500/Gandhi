@@ -1,0 +1,76 @@
+<%- include('../partials/admin-header', { pageTitle: 'Manage Catalogues', activeMenu: 'categories' }) %>
+
+<div class="breadcrumb">Admin / Manage Catalogues</div>
+<div class="content-header">
+  <div class="content-header-title">
+    <div class="icon-box"><i class="fa-solid fa-folder-plus"></i></div>
+    <div>
+      <h1 style="font-size: 24px; color: #0f172a;">Manage Catalogues</h1>
+      <p style="font-size: 13.5px; color: #64748b; margin-top: 2px;">Add catalogue categories that will appear across the admin panel.</p>
+    </div>
+  </div>
+</div>
+
+<% if (typeof query !== 'undefined' && query.error === 'exists') { %>
+<div class="error-alert" style="margin-bottom: 20px;">That catalogue already exists.</div>
+<% } else if (typeof query !== 'undefined' && query.error === 'missing') { %>
+<div class="error-alert" style="margin-bottom: 20px;">Enter a catalogue name before saving.</div>
+<% } else if (typeof query !== 'undefined' && query.success === 'added') { %>
+<div style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 12px 14px; border-radius: 8px; margin-bottom: 20px;">Catalogue added successfully.</div>
+<% } else if (typeof query !== 'undefined' && query.success === 'deleted') { %>
+<div style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 12px 14px; border-radius: 8px; margin-bottom: 20px;">Catalogue deleted successfully.</div>
+<% } else if (typeof query !== 'undefined' && query.error === 'has-products') { %>
+<div class="error-alert" style="margin-bottom: 20px;">Cannot delete <strong><%= query.name %></strong> because it still contains products. Move or delete those products first.</div>
+<% } else if (typeof query !== 'undefined' && query.error === 'last') { %>
+<div class="error-alert" style="margin-bottom: 20px;">At least one catalogue must remain.</div>
+<% } %>
+
+<div class="form-card" style="max-width: 650px; margin-bottom: 24px;">
+  <form action="/admin/categories" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="form-group">
+      <label for="catalogue-name">New Catalogue Name</label>
+      <input id="catalogue-name" type="text" name="name" class="form-control" placeholder="e.g. Shower Panels" required maxlength="80">
+    </div>
+    <button type="submit" class="btn-submit"><i class="fa-solid fa-plus"></i> Add Catalogue</button>
+  </form>
+</div>
+
+<div class="table-card">
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Catalogue</th>
+          <th>Products</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% categories.forEach(category => { %>
+        <tr>
+          <td><i class="fa-solid <%= category.icon %>" style="width: 22px; color: #0284c7;"></i><strong><%= category.name %></strong></td>
+          <td style="color: #64748b;"><%= category.productCount %> product<%= category.productCount === 1 ? '' : 's' %></td>
+          <td style="text-align: right; white-space: nowrap;">
+            <form action="/admin/categories/<%= encodeURIComponent(category.name) %>?_method=DELETE" method="POST" style="display: inline;">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <% if (category.productCount > 0) { %>
+              <button type="button" class="btn-action-delete" disabled title="Move or delete products in this catalogue first">
+                <i class="fa-regular fa-trash-can"></i> Delete
+              </button>
+              <% } else { %>
+              <button type="submit" class="btn-action-delete" onclick="return confirm('Are you sure you want to delete this catalogue?')">
+                <i class="fa-regular fa-trash-can"></i> Delete
+              </button>
+              <% } %>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-footer"><div><%= categories.length %> catalogues available</div></div>
+</div>
+
+<%- include('../partials/admin-footer') %>

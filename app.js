@@ -204,7 +204,6 @@ app.post("/contact-us", contactRateLimiter, (req, res) => {
 
   const name = String(req.body.name || "").trim().slice(0, 100);
   const phone = String(req.body.phone || "").trim().slice(0, 30);
-  const email = String(req.body.email || "").trim().slice(0, 160);
   const sinkModel = String(req.body.sinkModel || "").trim().slice(0, 120);
   const message = String(req.body.message || "").trim().slice(0, 2000);
 
@@ -219,7 +218,6 @@ app.post("/contact-us", contactRateLimiter, (req, res) => {
     date: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
     name,
     phone,
-    email: email || "N/A",
     sinkModel: sinkModel || "General Inquiry",
     message,
     status: "Pending",
